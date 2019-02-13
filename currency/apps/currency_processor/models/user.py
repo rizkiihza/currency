@@ -8,7 +8,7 @@ class User(models.Model):
 class RateWatched(models.Model):
     rate_watched_id = models.IntegerField(primary_key=True, unique=True)
 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     currency_from = models.CharField(max_length=128)
     currency_to = models.CharField(max_length=128)
