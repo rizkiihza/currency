@@ -12,15 +12,24 @@ class RateWatchedProcessor(object):
         rate_data = {}
         rate_data['from'] = currency_form
         rate_data['to'] = currency_to
-        rate_data['rate'] = RateProcessor.get_current_rate_data(currency_form, currency_to, date)
-
-        rates = RateProcessor().get_aggregate_period_data(currency_form, currency_to, date)
 
         average_tag = "%d-day avg" % (AGGREGATION_PERIOD)
-        rate_data[average_tag] = RateProcessor.calculate_aggregate_period_average(rates)
-
         variance_tag = "%d-day avg" % (AGGREGATION_PERIOD)
-        rate_data[variance_tag] = RateProcessor.calculate_aggregate_period_variance(rates)
+        try:
+            rate_data['rate'] = RateProcessor.get_current_rate_data(currency_form, currency_to, date)
+
+            rates = RateProcessor().get_aggregate_period_data(currency_form, currency_to, date)
+            
+            rate_data[average_tag] = RateProcessor.calculate_aggregate_period_average(rates)
+            rate_data[variance_tag] = RateProcessor.calculate_aggregate_period_variance(rates)
+
+        except:
+            rate_data['rate'] = 'Insufficient data'
+            rate_data[average_tag] = 'Insufficient data'
+            rate_data[variance_tag] = 'Insufficient data'
+
+        finally:
+            return rate_data
 
     @staticmethod
     def get_all_watched_rate_data_of_user(user, date):

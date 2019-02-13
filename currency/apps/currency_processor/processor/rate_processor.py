@@ -19,9 +19,9 @@ class RateProcessor(object):
 
     @staticmethod
     def get_aggregate_period_data(currency_from, currency_to, date):
-        last_week_day = date - timedelta(day=AGGREGATION_PERIOD)
+        start_period = date - timedelta(day=AGGREGATION_PERIOD)
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, 
-                                    date__gte=last_week_day)
+                                    date__gte=start_period)
 
         return rates
 
