@@ -23,4 +23,18 @@ class RateWatchedProcessor(object):
             watchlist_data['data'].append(rate_data)
 
         return watchlist_data
+
+    @staticmethod
+    def add_rate_to_watched_rate(user_id, currency_from, currency_to):
+        user  = User.objects.get(user_id)
+        rate_watched, created = RateWatched.get_or_create(user=user, currency_from=currency_from, 
+                                                        currency_to=currency_to)
+        return created
+    
+    @staticmethod
+    def remove_rate_from_watched_rate(user_id, currency_from, currency_to):
+        user, _ = User.get_or_create(user_id)
+        rate_watched = RateWatched.objects.get(user=user, currency_from=currency_from, currency_to=currency_to)
+        if rate_watched is not None:
+            rate_watched.delete()
     

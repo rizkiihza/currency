@@ -52,8 +52,6 @@ class RateProcessorTestFullData(TestCase):
     
     def test_get_historical_data(self):
         historical_data = RateProcessor.get_historical_data(self.currency_from, self.currency_to, self.today)
-        for data in historical_data:
-            print(data)
         self.assertEqual(len(historical_data), AGGREGATION_PERIOD)
 
 class RateProcessorTestEmptyData(TestCase):

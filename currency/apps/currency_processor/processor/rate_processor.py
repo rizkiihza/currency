@@ -10,6 +10,20 @@ Rate = apps.get_model("currency_processor", "Rate")
 
 class RateProcessor(object):
     @staticmethod
+    def insert_rate_data(currency_from, currency_to, value, date):
+        # check wether data already exist
+        rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, date=date)
+
+        # if data exist, then override that data
+        if len(rate) > 0:
+            rates[0].value = value
+            rates[0].save()
+            return rates[0]
+        
+        rate = Rate.objects.create(currency_from=currency_from, currency_to=currency_to, value=value, date=date)
+        return rate
+
+    @staticmethod
     def get_current_rate_data(currency_from, currency_to, date):
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, date=date)
         if len(rates) == 0:
@@ -17,6 +31,7 @@ class RateProcessor(object):
         
         return rates[0]
 
+    # return data from AGGREGATION_PERIOD range
     @staticmethod
     def get_aggregate_period_data(currency_from, currency_to, date):
         start_period = date - timedelta(days=AGGREGATION_PERIOD-1)
@@ -58,6 +73,7 @@ class RateProcessor(object):
 
         return rate_max - rate_min
     
+    # get historical data over AGGREGATION_PERIOD range
     @staticmethod
     def get_historical_data(currency_from, currency_to, date):
         historical_data_dict = {}
@@ -74,6 +90,8 @@ class RateProcessor(object):
         return sorted(historical_data_list, key= lambda element: element['date'])
 
 
+    # creating dictionary data for a specific rate
+    # can also include historical data using with_historical_data parameter
     @staticmethod
     def get_specific_rate_data(currency_from, currency_to, date, with_historical_data=False):
         rate_data = {}
