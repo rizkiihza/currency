@@ -1,0 +1,9 @@
+from django.apps import apps
+
+rate = apps.get_model("currency_processor", "Rate")
+currency_from = "USD"
+currency_to = "IDR"
+value = 15000
+rate, _ = rate.objects.get_or_create(currency_from=currency_from,currency_to=currency_to, value=value)
+
+print(rate)
