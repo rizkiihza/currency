@@ -3,8 +3,7 @@ from django.utils.timezone import now
 
 # Create your models here.
 class Rate(models.Model):
-    rate_id = models.IntegerField(primary_key=True,unique=True)
-
+    rate_id = models.AutoField(primary_key=True)
     currency_form = models.CharField(max_length=128)
     currency_to = models.CharField(max_length=128)
 

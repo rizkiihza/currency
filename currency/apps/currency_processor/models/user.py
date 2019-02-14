@@ -6,7 +6,7 @@ class User(models.Model):
     name = models.CharField(max_length=128, blank=True)
 
 class RateWatched(models.Model):
-    rate_watched_id = models.IntegerField(primary_key=True, unique=True)
+    rate_watched_id = models.AutoField(primary_key=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
