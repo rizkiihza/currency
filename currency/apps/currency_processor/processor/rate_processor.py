@@ -16,7 +16,7 @@ class RateProcessor(object):
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, date=date)
 
         # if data exist, then override that data
-        if len(rate) > 0:
+        if len(rates) > 0:
             rates[0].value = value
             rates[0].save()
             return rates[0]

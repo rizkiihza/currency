@@ -3,8 +3,12 @@ from datetime import datetime
 class DateConverter(object):
     @staticmethod
     def convert_to_datetime_from_string(date_string):
-        date = datetime.strptime(date_string, "%Y-%m-%d")
-        return date
+        try:
+            date = datetime.strptime(date_string, "%Y-%m-%d")
+        except:
+            raise Exception("incorrect format")
+        finally:
+            return date
         
 
     @staticmethod
