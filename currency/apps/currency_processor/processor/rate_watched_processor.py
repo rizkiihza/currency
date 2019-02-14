@@ -2,6 +2,7 @@ from django.apps import apps
 
 from currency.apps.currency_processor.constants import AGGREGATION_PERIOD
 from currency.apps.currency_processor.processor.rate_processor import RateProcessor
+from currency.apps.currency_processor.utils.date_converter import DateConverter
 
 User = apps.get_model("currency_processor", "User")
 RateWatched = apps.get_model("currency_processor", "RateWatched")

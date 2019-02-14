@@ -7,3 +7,14 @@ value = 15000
 rate, _ = rate.objects.get_or_create(currency_from=currency_from,currency_to=currency_to, value=value)
 
 print(rate)
+
+from django.utils import timezone
+from currency.apps.currency_processor.utils.date_converter import DateConverter
+
+today = timezone.now().date()
+date_string = DateConverter.convert_to_string_from_datetime(today)
+
+print(date_string)
+date = DateConverter.convert_to_datetime_from_string(date_string)
+
+print(date)

@@ -2,6 +2,7 @@ from django.apps import apps
 from datetime import timedelta
 from math import inf
 
+from currency.apps.currency_processor.utils.date_converter import DateConverter
 from currency.apps.currency_processor.constants import (
     AGGREGATION_PERIOD
 )
@@ -85,8 +86,8 @@ class RateProcessor(object):
             if rate.date in list_of_dates:
                 historical_data_dict[rate.date] = float(rate.value)
 
-      
         historical_data_list = [{'date': date, 'rate': historical_data_dict[date]} for date in historical_data_dict]
+
         return sorted(historical_data_list, key= lambda element: element['date'])
 
 
