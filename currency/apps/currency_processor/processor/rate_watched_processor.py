@@ -9,7 +9,7 @@ RateWatched = apps.get_model("currency_processor", "RateWatched")
 class RateWatchedProcessor(object):
     @staticmethod
     def get_all_watched_rate_data_of_user(user, date):
-        rate_watched = RateWatched(user=user)
+        rate_watched = RateWatched.objects.filter(user=user)
 
         watchlist_data = {}
         watchlist_data['date'] = date
@@ -23,5 +23,4 @@ class RateWatchedProcessor(object):
             watchlist_data['data'].append(rate_data)
 
         return watchlist_data
-
     

@@ -8,7 +8,7 @@ class Rate(models.Model):
     currency_to = models.CharField(max_length=128)
 
     value = models.DecimalField(max_digits=10, decimal_places=4)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=now().date())
 
     def __str__(self):
         return "%s | %s to %s: %f" % (self.date, self.currency_from, self.currency_to, self.value)
