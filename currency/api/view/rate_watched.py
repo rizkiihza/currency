@@ -16,8 +16,6 @@ class RateWatchedAPIView(APIView):
     def get(self, request):
         try:
             # parse date
-            today = timezone.now().date()
-            default_date = DateConverter.convert_to_string_from_datetime(today)
             date_string = request.GET.get("date", default_date)
             date = DateConverter.convert_to_datetime_from_string(date_string)
 

@@ -14,9 +14,7 @@ class RateAPIView(APIView):
     def get(self, request):
         try:
             # parse date
-            today = timezone.now().date()
-            default_date = DateConverter.convert_to_string_from_datetime(today)
-            date_string = request.GET.get("date", default_date)
+            date_string = request.GET.get("date")
             date = DateConverter.convert_to_datetime_from_string(date_string)
 
             # parse currency
@@ -39,9 +37,7 @@ class RateAPIView(APIView):
     def post(self, request):
         try:
             # parse date
-            today = timezone.now().date()
-            default_date = DateConverter.convert_to_string_from_datetime(today)
-            date_string = request.POST.get("date", default_date)
+            date_string = request.POST.get("date")
             date = DateConverter.convert_to_datetime_from_string(date_string)
 
             # parse currency
