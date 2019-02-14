@@ -19,14 +19,19 @@ class RateProcessor(object):
 
     @staticmethod
     def get_aggregate_period_data(currency_from, currency_to, date):
-        start_period = date - timedelta(day=AGGREGATION_PERIOD)
+        start_period = date - timedelta(days=AGGREGATION_PERIOD-1)
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, 
                                     date__gte=start_period)
+
+        if len(rates) < AGGREGATION_PERIOD:
+            raise Exception("Insufficient data")
 
         return rates
 
     @staticmethod
     def calculate_aggregate_period_average(rates):
+        if rates is None:
+            raise Exception("Insufficient data")
         if len(rates) < AGGREGATION_PERIOD:
             raise Exception("Insufficient data")
 
@@ -39,6 +44,8 @@ class RateProcessor(object):
 
     @staticmethod
     def calculate_aggregate_period_variance(rates):
+        if rates is None:
+            raise Exception("Insufficient data")
         if len(rates) < AGGREGATION_PERIOD:
             raise Exception("Insufficient data")
 
@@ -51,3 +58,26 @@ class RateProcessor(object):
 
         return rate_max - rate_min
         
+    @staticmethod
+    def get_specific_rate_data(currency_form, currency_to, date):
+        rate_data = {}
+        rate_data['from'] = currency_form
+        rate_data['to'] = currency_to
+
+        average_tag = "%d-day avg" % (AGGREGATION_PERIOD)
+        variance_tag = "%d-day avg" % (AGGREGATION_PERIOD)
+        try:
+            rate_data['rate'] = RateProcessor.get_current_rate_data(currency_form, currency_to, date)
+
+            rates = RateProcessor.get_aggregate_period_data(currency_form, currency_to, date)
+            
+            rate_data[average_tag] = RateProcessor.calculate_aggregate_period_average(rates)
+            rate_data[variance_tag] = RateProcessor.calculate_aggregate_period_variance(rates)
+
+        except:
+            rate_data['rate'] = 'Insufficient data'
+            rate_data[average_tag] = 'Insufficient data'
+            rate_data[variance_tag] = 'Insufficient data'
+
+        finally:
+            return rate_data
