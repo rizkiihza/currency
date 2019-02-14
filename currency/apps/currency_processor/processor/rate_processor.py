@@ -79,13 +79,17 @@ class RateProcessor(object):
     def get_historical_data(currency_from, currency_to, date):
         historical_data_dict = {}
 
-        list_of_dates = set([date - timedelta(days=day) for day in range(AGGREGATION_PERIOD)])
+        list_of_dates = [DateConverter.convert_to_string_from_datetime((date - timedelta(days=day))) 
+                                for day in range(AGGREGATION_PERIOD)]
+
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, 
                                         date__gte=date-timedelta(days=AGGREGATION_PERIOD-1))
         for rate in rates:
-            if rate.date in list_of_dates:
+            date_string = DateConverter.convert_to_string_from_datetime(rate.date)
+            if date_string in list_of_dates:
                 historical_data_dict[rate.date] = float(rate.value)
 
+        
         historical_data_list = [{'date': date, 'rate': historical_data_dict[date]} for date in historical_data_dict]
 
         return sorted(historical_data_list, key= lambda element: element['date'])

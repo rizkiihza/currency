@@ -27,8 +27,8 @@ class RateWatchedProcessor(object):
 
     @staticmethod
     def add_rate_to_watched_rate(user_id, currency_from, currency_to):
-        user  = User.objects.get(user_id)
-        rate_watched, created = RateWatched.get_or_create(user=user, currency_from=currency_from, 
+        user, _  = User.objects.get_or_create(user_id=user_id)
+        rate_watched, created = RateWatched.objects.get_or_create(user=user, currency_from=currency_from, 
                                                         currency_to=currency_to)
         return created
     

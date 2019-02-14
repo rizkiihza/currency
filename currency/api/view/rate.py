@@ -29,6 +29,9 @@ class RateAPIView(APIView):
             # convert all date in historical to string
             converted_rate_data = DictionaryConverter.convert_historical_data_date_to_string(rate_data)
 
+            # add date to result
+            converted_rate_data['date'] = date_string
+
             return Response(converted_rate_data, status.HTTP_200_OK)
         except Exception as e:
             return Response({"error" : str(e)}, status.HTTP_400_BAD_REQUEST)
