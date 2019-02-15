@@ -4,7 +4,4 @@ jobs:
     machine: true # Use a Linux VM instead of docker environment
     working_directory: ~/repo # Default working directory, where your project will be cloned
     steps:
-      - checkout
       - run: docker-compose up -d
-      - run: docker-compose exec python manage.py migrate
-      - run: docker-compose exec python manage.py test
