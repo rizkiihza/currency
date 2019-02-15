@@ -52,6 +52,7 @@ class RateAPIView(APIView):
             serialized_data = RateSerializer(rate)
             
             return Response(serialized_data.data, status.HTTP_200_OK)
+            
         except Exception as e:
             return Response({"error": "Parameter is incomplete"}, status.HTTP_400_BAD_REQUEST)
 
