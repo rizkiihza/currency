@@ -7,4 +7,4 @@ jobs:
       - checkout
       - run: docker-compose up -d
       - run: docker-compose exec web python manage.py migrate
-      - run: docker-compose exec web python manage.py test
+      - run: docker-compose exec web python manage.py test --no-input
