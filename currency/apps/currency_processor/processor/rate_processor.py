@@ -21,7 +21,7 @@ class RateProcessor(object):
             rates[0].save()
             return rates[0]
         
-        rate = Rate.objects.create(currency_from=currency_from, currency_to=currency_to, value=value, date=date)
+        rate, _ = Rate.objects.get_or_create(currency_from=currency_from, currency_to=currency_to, value=value, date=date)
         return rate
 
     @staticmethod
@@ -36,8 +36,9 @@ class RateProcessor(object):
     @staticmethod
     def get_aggregate_period_data(currency_from, currency_to, date):
         start_period = date - timedelta(days=AGGREGATION_PERIOD-1)
+        end_period = date
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, 
-                                    date__gte=start_period)
+                                    date__gte=start_period, date__lte=end_period)
 
         if len(rates) < AGGREGATION_PERIOD:
             raise Exception("Insufficient data")
