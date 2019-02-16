@@ -4,7 +4,8 @@ from math import inf
 
 from currency.apps.currency_processor.utils.date_converter import DateConverter
 from currency.apps.currency_processor.constants import (
-    AGGREGATION_PERIOD
+    AGGREGATION_PERIOD,
+    MESSAGE_INSUFFICIENT_DATA
 )
 
 Rate = apps.get_model("currency_processor", "Rate")
@@ -28,7 +29,7 @@ class RateProcessor(object):
     def get_current_rate_data(currency_from, currency_to, date):
         rates = Rate.objects.filter(currency_from=currency_from, currency_to=currency_to, date=date)
         if len(rates) == 0:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
         
         return rates[0]
 
@@ -41,16 +42,16 @@ class RateProcessor(object):
                                     date__gte=start_period, date__lte=end_period)
 
         if len(rates) < AGGREGATION_PERIOD:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
 
         return rates
 
     @staticmethod
     def calculate_aggregate_period_average(rates):
         if rates is None:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
         if len(rates) < AGGREGATION_PERIOD:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
 
         total_sum = 0
 
@@ -62,9 +63,9 @@ class RateProcessor(object):
     @staticmethod
     def calculate_aggregate_period_variance(rates):
         if rates is None:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
         if len(rates) < AGGREGATION_PERIOD:
-            raise Exception("Insufficient data")
+            raise Exception(MESSAGE_INSUFFICIENT_DATA)
 
         rate_max = -1*inf
         rate_min = inf
@@ -106,6 +107,7 @@ class RateProcessor(object):
 
         average_tag = "%d-day avg" % (AGGREGATION_PERIOD)
         variance_tag = "%d-day variance" % (AGGREGATION_PERIOD)
+
         try:
             current_rate = RateProcessor.get_current_rate_data(currency_from, currency_to, date)
             rate_data['rate'] = float(current_rate.value)
@@ -115,9 +117,9 @@ class RateProcessor(object):
             rate_data[variance_tag] = RateProcessor.calculate_aggregate_period_variance(rates)
 
         except:
-            rate_data['rate'] = 'Insufficient data'
-            rate_data[average_tag] = 'Insufficient data'
-            rate_data[variance_tag] = 'Insufficient data'
+            rate_data['rate'] = float(current_rate.value) if current_rate is not None else MESSAGE_INSUFFICIENT_DATA
+            rate_data[average_tag] = MESSAGE_INSUFFICIENT_DATA
+            rate_data[variance_tag] = MESSAGE_INSUFFICIENT_DATA
 
         finally:
             if with_historical_data:
