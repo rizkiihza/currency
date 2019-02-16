@@ -108,6 +108,7 @@ class RateProcessor(object):
         average_tag = "%d-day avg" % (AGGREGATION_PERIOD)
         variance_tag = "%d-day variance" % (AGGREGATION_PERIOD)
 
+        current_rate = None
         try:
             current_rate = RateProcessor.get_current_rate_data(currency_from, currency_to, date)
             rate_data['rate'] = float(current_rate.value)
@@ -117,10 +118,9 @@ class RateProcessor(object):
             rate_data[variance_tag] = RateProcessor.calculate_aggregate_period_variance(rates)
 
         except:
-            rate_data['rate'] = float(current_rate.value) if current_rate is not None else MESSAGE_INSUFFICIENT_DATA
+            rate_data['rate'] =  MESSAGE_INSUFFICIENT_DATA if current_rate is None else float(current_rate.value)
             rate_data[average_tag] = MESSAGE_INSUFFICIENT_DATA
             rate_data[variance_tag] = MESSAGE_INSUFFICIENT_DATA
-
         finally:
             if with_historical_data:
                 rate_data['historical_data'] = RateProcessor.get_historical_data(currency_from, currency_to, date)
