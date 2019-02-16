@@ -7,7 +7,6 @@ from django.utils import timezone
 from currency.apps.currency_processor.utils.date_converter import DateConverter
 from currency.apps.currency_processor.processor.rate_watched_processor import RateWatchedProcessor
 from currency.api.utils.dictionary_converter import DictionaryConverter
-from currency.api.constant import DEFAULT_CURRENCY
 from currency.api.serializer.rate_watched import RateWatchedSerializer
 
 User = apps.get_model("currency_processor", "User")
@@ -36,8 +35,8 @@ class RateWatchedAPIView(APIView):
     def post(self, request):
         try:
             # parse currency to add
-            currency_from = request.POST.get("currency_from", DEFAULT_CURRENCY)
-            currency_to = request.POST.get("currency_to", DEFAULT_CURRENCY)
+            currency_from = request.POST.get("currency_from")
+            currency_to = request.POST.get("currency_to")
 
             # parse user id
             user_id = int(request.POST.get("user_id"))
@@ -49,3 +48,22 @@ class RateWatchedAPIView(APIView):
             return Response(serialized_data.data, status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": "Invalid parameter"}, status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        try:
+            # parse currency to delete
+            currency_from = request.POST.get("currency_from")
+            currency_to = request.POST.get("currency_to")
+            user_id = request.POST.get("user_id")
+
+            # parse user id
+            user_id = int(request.POST.get("user_id"))
+
+            rate_watched = RateWatchedProcessor.remove_rate_from_watched_rate(user_id, currency_from, currency_to)
+
+            serialized_data = RateWatchedSerializer(rate_watched)
+
+            return Response(serialized_data.data, status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": "wrong parameter or there is no object to be deleted"}, 
+                                status.HTTP_400_BAD_REQUEST)

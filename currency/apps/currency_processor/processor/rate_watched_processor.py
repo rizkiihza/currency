@@ -34,8 +34,11 @@ class RateWatchedProcessor(object):
     
     @staticmethod
     def remove_rate_from_watched_rate(user_id, currency_from, currency_to):
-        user, _ = User.get_or_create(user_id)
-        rate_watched = RateWatched.objects.get(user=user, currency_from=currency_from, currency_to=currency_to)
-        if rate_watched is not None:
+        try:
+            user, _ = User.objects.get_or_create(user_id=user_id)
+            rate_watched = RateWatched.objects.get(user=user, currency_from=currency_from, currency_to=currency_to)
             rate_watched.delete()
+            return rate_watched
+        except Exception as e:
+            raise Exception("cannot remove watched rate from this use")
     

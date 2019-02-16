@@ -19,8 +19,8 @@ class RateAPIView(APIView):
             date = DateConverter.convert_to_datetime_from_string(date_string)
 
             # parse currency
-            currency_from = request.GET.get("currency_from", DEFAULT_CURRENCY)
-            currency_to = request.GET.get("currency_to", DEFAULT_CURRENCY)
+            currency_from = request.GET.get("currency_from")
+            currency_to = request.GET.get("currency_to")
 
             rate_data = RateProcessor.get_specific_rate_data(currency_from=currency_from,
                                                         currency_to=currency_to, date=date.date(), with_historical_data=True)
@@ -42,8 +42,8 @@ class RateAPIView(APIView):
             date = DateConverter.convert_to_datetime_from_string(date_string)
 
             # parse currency
-            currency_from = request.POST.get("currency_from", DEFAULT_CURRENCY)
-            currency_to = request.POST.get("currency_to", DEFAULT_CURRENCY)
+            currency_from = request.POST.get("currency_from")
+            currency_to = request.POST.get("currency_to")
 
             # parse value
             value = float(request.POST.get("value"))

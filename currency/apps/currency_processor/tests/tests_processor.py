@@ -109,6 +109,13 @@ class RateWatchedProcessorTestEmptyData(TestCase):
         self.assertEqual(watchlist_data['date'], today)
         self.assertEqual(len(watchlist_data['data']), 0)
 
+    def test_remove_watched_rate(self):
+        currency_from = "USD"
+        currency_to = "IDR"
+        user_id = self.user
+        with self.assertRaises(Exception):
+            rate_watched = RateWatchedProcessor.remove_rate_from_watched_rate(user_id, currency_from, currency_to)
+
 class RateWatchedProcessorTestFullData(TestCase):
     def setUp(self):
         self.user = User.objects.create(user_id=1, name="Rizki Ihza")
@@ -143,3 +150,18 @@ class RateWatchedProcessorTestFullData(TestCase):
         self.assertEqual(rate_data['rate'], self.value)
         self.assertEqual(rate_data[average_tag], self.value)
         self.assertEqual(rate_data[variance_tag], 0)
+
+    def test_remove_rate_from_watched_rate(self):
+        currency_from = self.currency_from
+        currency_to = self.currency_to
+        user_id = self.user.user_id
+
+        initial_rate_watched_count = len(RateWatched.objects.all())
+
+        rate_watched = RateWatchedProcessor.remove_rate_from_watched_rate(user_id, currency_from, currency_to)
+        self.assertEqual(rate_watched.user, self.user)  
+        self.assertEqual(rate_watched.currency_from, self.currency_from)
+        self.assertEqual(rate_watched.currency_to, self.currency_to)
+        
+        final_rate_watched_count = len(RateWatched.objects.all())
+        self.assertEqual(final_rate_watched_count+1, initial_rate_watched_count)
