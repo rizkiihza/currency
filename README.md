@@ -45,7 +45,7 @@ vim .circleci/config.yml
 
 ## Documentation
 
-API documentation:
+API documentation: https://docs.google.com/document/d/1MAW78psUvQ5pJdP0jY5-KzUZFc6tXkm5EywiKTqN7Io/edit?usp=sharing
 
-Class Diagram documentation: 
+Class Diagram documentation: https://docs.google.com/document/d/1ympXFS_wXNusH_srCVeKczvmdZsQ6jKbszEMuDcMS0Y/edit?usp=sharing 
 

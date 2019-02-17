@@ -102,8 +102,8 @@ class RateProcessor(object):
     @staticmethod
     def get_specific_rate_data(currency_from, currency_to, date, with_historical_data=False):
         rate_data = {}
-        rate_data['from'] = currency_from
-        rate_data['to'] = currency_to
+        rate_data['currency_from'] = currency_from
+        rate_data['currency_to'] = currency_to
 
         average_tag = "%d-day avg" % (AGGREGATION_PERIOD)
         variance_tag = "%d-day variance" % (AGGREGATION_PERIOD)

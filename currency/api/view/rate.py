@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.apps import apps
 from django.utils import timezone
+import json
 
 from currency.api.constant import DEFAULT_CURRENCY
 from currency.api.utils.dictionary_converter import DictionaryConverter
@@ -37,16 +38,18 @@ class RateAPIView(APIView):
 
     def post(self, request):
         try:
+            request_body = json.loads(request.body.decode('utf-8'))
+            
             # parse date
-            date_string = request.POST.get("date")
+            date_string = request_body["date"]
             date = DateConverter.convert_to_datetime_from_string(date_string)
-
+            
             # parse currency
-            currency_from = request.POST.get("currency_from")
-            currency_to = request.POST.get("currency_to")
-
+            currency_from = request_body["currency_from"]
+            currency_to = request_body["currency_to"]
+            
             # parse value
-            value = float(request.POST.get("value"))
+            value = float(request_body["value"])
 
             rate = RateProcessor.insert_rate_data(currency_from, currency_to, value, date.date())
             serialized_data = RateSerializer(rate)

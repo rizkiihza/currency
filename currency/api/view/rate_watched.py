@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.apps import apps
 from django.utils import timezone
+import json
 
 from currency.apps.currency_processor.utils.date_converter import DateConverter
 from currency.apps.currency_processor.processor.rate_watched_processor import RateWatchedProcessor
@@ -34,12 +35,14 @@ class RateWatchedAPIView(APIView):
 
     def post(self, request):
         try:
+            request_body = json.loads(request.body.decode("utf-8"))
+
             # parse currency to add
-            currency_from = request.POST.get("currency_from")
-            currency_to = request.POST.get("currency_to")
+            currency_from = request_body["currency_from"]
+            currency_to = request_body["currency_to"]
 
             # parse user id
-            user_id = int(request.POST.get("user_id"))
+            user_id = int(request_body["user_id"])
             
             rate_watched = RateWatchedProcessor.add_rate_to_watched_rate(user_id, currency_from, currency_to)
 
@@ -51,13 +54,14 @@ class RateWatchedAPIView(APIView):
 
     def delete(self, request):
         try:
+            request_body = json.loads(request.body.decode("utf-8"))
+
             # parse currency to delete
-            currency_from = request.POST.get("currency_from")
-            currency_to = request.POST.get("currency_to")
-            user_id = request.POST.get("user_id")
+            currency_from = request_body["currency_from"]
+            currency_to = request_body["currency_to"]
 
             # parse user id
-            user_id = int(request.POST.get("user_id"))
+            user_id = int(request_body["user_id"])
 
             rate_watched = RateWatchedProcessor.remove_rate_from_watched_rate(user_id, currency_from, currency_to)
 
